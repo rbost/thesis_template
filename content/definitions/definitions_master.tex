@@ -1,0 +1,29 @@
+% !TEX root = ../content.tex
+
+
+\chapterquote{Notations, Definitions and Preliminaries}{In the beginning, God created the heavens and the earth.}{Genesis}{} % (fold)
+\label{cha:definitions}
+
+\enluminure{T}{ime to step in the real stuff.} 
+Define all what you will need the next chapters here.
+Follows an example for cryptography.
+Blah blah blah \dots
+
+
+
+\onlyif{chap_minitoc}{
+\minitoc
+}	
+\clearpage
+
+\subimport{./}{math_notations.tex}
+\subimport{./}{crypto_defs.tex}
+\subimport{./}{crypto_primitives.tex}
+
+\onlyif{biblatex}{
+\onlyif{chapter_bib}{
+\printbibliography[heading=references, segment=\therefsegment]
+}
+}
+
+% chapter definitions (end)

@@ -1,0 +1,91 @@
+%%% Example of a cover page derived from the one of Université de Rennes 1
+
+\documentclass[10pt]{book}
+
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{color}
+\definecolor{light_gray}{gray}{0.45}
+\usepackage{amssymb, amsmath, amsfonts}
+\usepackage{dsfont}
+\usepackage{vmargin}
+
+%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%
+
+
+\newlength{\plarg}
+\setlength{\plarg}{8cm}
+\newlength{\glarg}
+\setlength{\glarg}{14cm}
+\newlength{\Glarg}
+\setlength{\Glarg}{15cm}
+
+\begin{titlepage}
+\thispagestyle{empty}
+
+\vspace{-1cm}
+\begin{minipage}{\glarg}
+\vspace{-4.5cm}
+{\color{light_gray}\large\hfill \bf 2040}
+\end{minipage}
+\vspace{-2cm}
+\begin{figure}[htp]
+\raisebox{14mm}{LOGO1}\hfill LOGO2
+\end{figure}
+
+\begin{center}
+\begin{minipage}{\glarg}
+\vspace{0.5cm}
+\centering{\Large\bfseries THESIS / MY BELOVED UNIVERSITY}\\ \vspace{0mm}\emph{\Large university subtitle}\\ \vspace{0.5cm}
+{\Large Requirement for the degree of}\\ \vspace{2mm}
+{\Large\bf DOCTOR OF PHILOSOPHY OF X UNIVERSITY}\\ \vspace{0.4cm}
+\emph{\Large Computer Science Department}\\ \vspace{2mm}
+% {\Large\bf Gra}\\ \vspace{0.3cm}
+{\Large by} \\ \vspace{3mm}
+{\Huge\bf John Doe}\\ \vspace{0.4cm}
+{\Large prepared in Nashville, Calizona}\vspace{0.3cm}
+\\
+\hspace{-20mm}{\rule{\Glarg}{1pt}}\\
+\vspace{8mm}
+
+\begin{tabular}{p{7cm}p{10cm}}
+\begin{minipage}{\plarg}
+\vspace{-4cm}
+\hspace{-1.8cm}{\huge\bf The title of your thesis }\vspace{5mm}
+
+\hspace{-1.8cm}{\huge\bf on several lines \dots}\vspace{5mm}
+
+\hspace{-1.8cm}{\huge\bf many lines \dots}\vspace{5mm}
+
+% \hspace{-1.8cm}{\huge\bf line }\vspace{5mm}
+
+% \hspace{-1.8cm}{\huge\bf line}
+
+\end{minipage}
+&
+\begin{minipage}{\plarg}
+{\large\bf Thesis defended in Nashville \vspace{1mm}\newline}
+{\large\bf on February, 30th 2040\vspace{2mm}\newline}
+{\large Jury : \vspace{2mm}\newline}
+{\Large\bf Alice ABSOLUTIST \vspace{0mm}\newline}
+{ University 1 \!/\! reviewer \vspace{1mm}\newline}
+{\Large\bf Bob BROWN \vspace{0mm}\newline}
+{ University 2 \!/\! reviewer \vspace{1mm}\newline}
+{\Large\bf Charlie COURAGEOUS \vspace{0mm}\newline}
+{ University 3 \!/\! some dude \vspace{1mm}\newline}
+{\Large\bf Eve EVIL \vspace{0mm}\newline}
+{ University 4 \!/\! examiner \vspace{1mm}\newline}
+{\Large\bf Jane SMITH \vspace{0mm}\newline}
+{X UNIVERSITY \!/\! PhD Advisor}
+
+\end{minipage}
+\end{tabular}
+
+\end{minipage}
+\end{center}
+\end{titlepage}
+
+\end{document}

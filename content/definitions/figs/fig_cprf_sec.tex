@@ -1,0 +1,67 @@
+%!TEX root = ../definitions_master.tex
+
+	\begin{figure}[ht]
+	% \begin{boxedminipage}{\textwidth}
+		\centering
+
+		\begin{tabular}{r|l}
+
+			\begin{minipage}[t]{0.45\textwidth}
+				\underline{$\Init()$}
+				\begin{algorithmic}[0]
+					\State $K \getsr \cK$
+					\State $b \getsr \zo$
+					\State $E \gets \emptyset, Z \gets \emptyset, L \gets \emptyset$
+				\end{algorithmic}
+
+
+				\underline{$\mathsf{Challenge}(x)$}
+				\begin{algorithmic}[0]
+					\State $Z \gets Z \cup \{x\}$
+					\If{$b = 0$}
+						\State $y \getsr \cR$
+					\Else
+						\State $y \gets F(K,x)$
+					\EndIf
+					\State \Return $y$
+				\end{algorithmic}
+				
+			\end{minipage}
+				&
+			\hspace{0.6cm}
+			\begin{minipage}[t]{0.45\textwidth-0.6cm}
+
+
+				\underline{$\Eval(x)$}
+				\begin{algorithmic}[0]
+					\State $E \gets E \cup \{x\}$
+					\State \Return $F(K,x)$
+				\end{algorithmic}
+				
+				
+				\underline{$\mathsf{Constrain}(C)$}
+				\begin{algorithmic}[0]
+					\State $L \gets L \cup {C}$
+					\State \Return $F.\mathsf{Constrain}(C)$
+				\end{algorithmic}
+
+
+				\underline{$\Final(b')$}
+				\begin{algorithmic}[0]
+					\SmallIf{$b = b'$, $E \cap Z = \emptyset$ \\ \hfill \textbf{and} $\forall (C,z) \in (L, Z), \ C(z) = 0$}
+						\State \Return $1$
+						\Comment{The adversary wins}
+					% \EndIf
+					\State \Return $0$
+					\Comment{The adversary looses}
+					
+				\end{algorithmic}
+
+			\end{minipage}
+		\end{tabular}
+		% \end{boxedminipage}
+		
+		\caption[Constrained PRF security game]{Procedures of the $G_\subgamestyle{cprf}$ security game. The lists $E$, $Z$, and $L$ are, respectively, the list of evaluated inputs, challenged inputs and constraints. The condition in $\Final$ ensures that the game is only challenged on constrained inputs, and never on an evaluated input.}
+		\label{fig:game_cprf}
+	\end{figure}
+	

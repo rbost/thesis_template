@@ -1,0 +1,243 @@
+% !TEX root = ../master.tex
+
+%-------------------------------------------------------------------
+%                        General Notations
+%-------------------------------------------------------------------
+
+% Calligraphic shortcuts.
+
+\def\cA{\mathcal{A}}
+\def\cB{\mathcal{B}}
+\def\cC{\mathcal{C}}
+\def\cD{\mathcal{D}}
+\def\cE{\mathcal{E}}
+\def\cF{\mathcal{F}}
+\def\cG{\mathcal{G}}
+\def\cH{\mathcal{H}}
+\def\cI{\mathcal{I}}
+\def\cJ{\mathcal{J}}
+\def\cK{\mathcal{K}}
+\def\cL{\mathcal{L}}
+\def\cM{\mathcal{M}}
+\def\cN{\mathcal{N}}
+\def\cO{\mathcal{O}}
+\def\cP{\mathcal{P}}
+\def\cQ{\mathcal{Q}}
+\def\cR{\mathcal{R}}
+\def\cS{\mathcal{S}}
+\def\cT{\mathcal{T}}
+\def\cU{\mathcal{U}}
+\def\cV{\mathcal{V}}
+\def\cW{\mathcal{W}}
+\def\cX{\mathcal{X}}
+\def\cY{\mathcal{Y}}
+\def\cZ{\mathcal{Z}}
+%%%%%%%%%%%%%%%%%
+
+\def\veca{\vc{a}}
+\def\vecb{\vc{b}}
+\def\vecc{\vc{c}}
+\def\vecd{\vc{d}}
+\def\vece{\vc{e}}
+\def\vecm{\vc{m}}
+\def\vecr{\vc{r}}
+\def\vecs{\vc{s}}
+\def\vect{\vc{t}}
+\def\vecv{\vc{v}}
+\def\vecx{\vc{x}}
+\def\vecy{\vc{y}}
+
+% \def\A{\mathcal{A}}
+% \def\B{\mathcal{B}}
+% \def\C{\mathcal{C}}
+% \def\D{\mathcal{D}}
+% \def\E{\mathcal{E}}
+% \def\I{\mathcal{I}}
+% \def\K{\mathcal{K}}
+% \def\M{\mathcal{M}}
+% \def\T{\mathcal{T}}
+% \def\U{\mathcal{U}}
+
+
+\def\bbC{{\mathbb C}}
+\def\bbE{{\mathbb E}}
+\def\bbF{{\mathbb F}}
+\def\bbG{{\mathbb G}}
+\def\bbM{{\mathbb M}}
+\def\bbN{{\mathbb N}}
+\def\bbQ{{\mathbb Q}}
+\def\bbR{{\mathbb R}}
+\def\bbV{{\mathbb V}}
+\def\bbZ{{\mathbb Z}}
+
+\def\Z{\mathbb{Z}}
+\def\Zq{\bbZ_q}
+\def\Zp{\bbZ_p}
+\def\N{\mathbb{N}}
+\def\R{\mathbb{R}}
+\def\Q{\mathbb{Q}}
+\def\F{\mathbb{F}}
+\def\P{\mathbb{P}}
+
+\newcommand{\te}{\widetilde{e}}
+\newcommand{\tf}{\widetilde{f}}
+\newcommand{\tF}{\widetilde{F}}
+\newcommand{\tN}{\widetilde{N}}
+
+\newcommand{\fC}{\mathfrak{C}}
+
+
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\arrT}{\mathbf{T}}
+
+% Abbreviations
+
+\newcommand{\ie}{\emph{i.e.}~}
+\newcommand{\eg}{\emph{e.g.}~}
+\newcommand{\cf}{\emph{cf.}~}
+
+
+% Large greek letters
+\newcommand{\Chi}{\text{\large{$\chi$}}}
+\newcommand{\lpi}{\text{\Large{$\pi$}}}
+
+
+
+\newcommand{\zo}{\{0,1\}}
+\newcommand{\zset}[1]{\{0, \ldots, {#1}\}}
+\newcommand{\oset}[1]{\{1, \ldots, {#1}\}}
+
+\newcommand{\bigo}{\mathcal{O}}
+
+% enclosers
+
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\round}[1]{\left\lfloor #1 \right\rceil}
+\newcommand{\ip}[1]{\left\langle #1 \right\rangle}
+\newcommand{\bb}[1]{\left\llbracket #1 \right\rrbracket}
+
+% Probabilities
+\let\Prob\relax % Babel's russian option already defines \Prob
+\DeclareMathOperator*{\Prob}{\mathbb{P}}
+\DeclareMathOperator*{\Exp}{\mathbb{E}}
+\DeclareMathOperator*{\Var}{\mathbb{V}ar}
+\DeclareMathOperator*{\Entropy}{\ensuremath{H_1}}
+\DeclareMathOperator*{\MinEntropy}{\ensuremath{H_{\infty}}}
+\DeclareMathOperator*{\Div}{\ensuremath{D_{KL}}}
+
+
+% Assignments
+\def\getsr{\stackrel{\scriptscriptstyle{\$}}{\gets}}
+\def\getsd{{:=}}
+%\def\bydef{\stackrel{.}{=}}
+\def\bydef{\triangleq}
+\def\getsf{{\gets}}
+\newcommand{\rand}{\getsr}
+\def\gettrans{\stackrel{\scriptscriptstyle{\mathsf{trans}}}{\gets}}
+
+
+
+% Encryption & Co.
+\newcommand{\MAC}{\mac}
+\newcommand{\Enc}{\enc}
+\newcommand{\Dec}{\dec}
+
+
+\newcommand{\KeyGen}{\pcalgostyle{KeyGen}}
+\newcommand{\Eval}{\pcalgostyle{Eval}}
+\newcommand{\Invert}{\pcalgostyle{Invert}}
+
+\newcommand{\HMAC}{\pcalgostyle{HMAC}}
+
+
+\newcommand{\aenc}{\pcalgostyle{AEnc}}
+\newcommand{\adec}{\pcalgostyle{ADec}}
+\newcommand{\AEnc}{\aenc}
+\newcommand{\ADec}{\adec}
+
+\newcommand{\PK}{\pckeystyle{PK}}
+\newcommand{\MPK}{\pckeystyle{MPK}}
+\newcommand{\MSK}{\pckeystyle{MSK}}
+\newcommand{\SK}{\pckeystyle{SK}}
+
+% Cryptographic assumptions
+
+\newcommand{\ddh}{\mathrm{DDH}}
+\newcommand{\cdh}{\mathrm{CDH}}
+\newcommand{\dlin}{\text{\rm $d$LIN}}
+\newcommand{\lin}{\text{\rm Lin}}
+\newcommand{\sxdh}{\mathrm{SXDH}}
+\newcommand{\rsa}{\mathrm{RSA}}
+\newcommand{\sis}{\mathrm{SIS}}
+\newcommand{\XPis}{\mathrm{ISIS}}
+\newcommand{\lwe}{\mathsf{LWE}}
+\newcommand{\qr}{\mathrm{QR}}
+
+% Landau
+\newcommand{\bigOtilde}[1]{\ensuremath{\widetilde{\mathcal{O}}\olrk{#1}}}
+
+% Security games
+
+\newcommand{\Init}{\mathsf{Init}}
+\newcommand{\Final}{\mathsf{Final}}
+
+\newcommand{\flag}{\mathsf{flag}}
+\newcommand{\win}{\mathsf{win}}
+
+\newcommand{\Real}{\mathbf{Real}}
+\newcommand{\Ideal}{\mathbf{Ideal}}
+
+
+\newcommand{\subgamestyle}[1]{\pcadvantagesuperstyle{#1}}
+
+% Advantage
+\newcommand{\advstyle}[1]{\mathbf{#1}}
+\newcommand{\advtext}{Adv}
+\newcommand{\Adv}{\advstyle{\advtext}}
+\newcommand{\AdvPlus}[1]{\advstyle{\advtext#1}}
+\newcommand{\AdvCor}{\AdvPlus{Cor}}
+\newcommand{\AdvConf}{\AdvPlus{Conf}}
+% \newcommand{\AdvComp}{\AdvPlus{Comp}}
+\newcommand{\AdvSound}{\AdvPlus{Snd}}
+\newcommand{\AdvColl}{\AdvPlus{Coll}}
+
+% Indistinguishability
+\newcommand{\Ind}[1]{\pcnotionstyle{Ind}\pcmathhyphen{}\pcnotionstyle{#1}}
+\newcommand{\indist}{\approx_c}
+
+% Specific games
+
+\newcommand{\EFCMA}{\pcnotionstyle{EF\pcmathhyphen{}CMA}}
+\newcommand{\efcma}{ef\pcmathhyphen{}cma}
+\newcommand{\INDPUNCPA}{\pcnotionstyle{IND\pcmathhyphen{}PUN\pcmathhyphen{}CPA}}
+\newcommand{\indpuncpa}{ind\pcmathhyphen{}pun\pcmathhyphen{}cpa}
+\newcommand{\puncpa}{pun\pcmathhyphen{}cpa}
+
+
+% Check caracter
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+
+
+% Spacing
+% math hyphen
+\mathchardef\mathhyphen ="2D
+
+\newcommand{\tab}{\ \ \ }
+\newcommand{\ttab}{\ \ \ \ \ \ }
+\newcommand{\tttab}{\ \ \ \ \ \ \ \ \ }
+
+% Colors
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\redu}[1]{\textcolor{red}{\underline{#1}}}
+
+% Roman numbers
+% biblatex already defines this
+\nottoggle{biblatex}{
+\newcommand{\RN}[1]{%
+  \textup{\uppercase\expandafter{\romannumeral#1}}%
+}
+}{}

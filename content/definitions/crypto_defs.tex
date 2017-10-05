@@ -1,0 +1,212 @@
+% !TEX root = definitions_master.tex
+
+\section{Cryptographic Preliminaries} % (fold)
+\label{sec:cryptographic_preliminaries}
+
+
+\subsection{Cryptographic Tools} % (fold)
+\label{sub:cryptographic_defs}
+
+\paragraph{Security parameter.} % (fold)
+\label{par:def_security_parameter}
+
+In order to properly formalize security notions, we need to bound the computing power of an attacker.
+Indeed, one can always break cryptosystems using a large enough computer and spending a high amount of time.
+However, in cryptography, we restrict ourselves to the defence against \emph{reasonable} attackers.
+To do so, we use the notion of \emph{security parameter}, denoted $\secpar \in \NN$.
+The security parameter is passed as an input to the attacker, under its unary representation $\secparam$, and we only consider attackers whose running time is polynomial in $\secpar$, and whose success probability is non-negligible in $\secpar$.
+
+All these notions are formally defined in the following paragraphs.
+
+% paragraph def_security_parameter (end)
+
+\paragraph{Adversaries.} % (fold)
+\label{par:def_adversaries}
+
+An adversary is a probabilistic Turing machine, which, in this manuscript, run in polynomial time, which may carry a state $\mathsf{st}$ when they need to be called several times.
+In most cases, we implicitly give as input to the adversary, both the unary representation of the security parameter, and the state.
+As a consequence, as adversaries' inputs are always polynomial in the security parameter, the polynomial time adversary runs in time polynomial in the security parameter.
+
+% paragraph def_adversaries (end)
+
+
+\paragraph{Games.} % (fold)
+\label{par:def_games}
+
+Security notions are often defined using security games (or experiments).
+Simple games are defined by having an adversary accessing a set of oracles, sometimes with some restrictions on calls to these oracles, and the output of the game is defined as the output of the adversary.
+
+More generally, games are defined using the \emph{code-based games} formalism introduced in~\cite{EC:BelRog06}.
+Such a game $G$ is a set of oracle procedures -- including an initialization $\Init$ procedure and a finalization $\Final$ procedure -- that is executed with an adversary $A$, \emph{i.e.} $A$ has access to the procedures, with some possible restrictions. 
+For instance, the $\Init$ oracle is always the first one to be called and $\Final$ the last one, once $A$ halted, taking $A$'s output as input. The output of $\Final$ is called the output of the game and is denoted $G^A(\secparam)$. When $\Final$ is omitted, it just forwards the adversary's output. 
+		
+In those games, at startup, the boolean variables are initialized to $\false$ and the integer variables to $0$.
+
+% paragraph def_games (end)
+
+\paragraph{Statistical Indistinguishability} % (fold)
+\label{par:def_stat_ind}
+
+Let $\cD_1$ and $\cD_2$ be two distributions over the set $S$.
+$\cD_1$ and $\cD_2$ are said to be \emph{statistically indistinguishable} if 
+\[
+	\Delta(\cD_1,\cD_2) \leq \negl.
+\] 
+We denote
+\[
+	\cD_1 \approx \cD_2
+\]
+the fact that $\cD_1$ and $\cD_2$ are statistically indistinguishable.
+
+
+% paragraph def_stat_ind (end)
+
+\paragraph{Computational Indistinguishability} % (fold)
+\label{par:def_comp_ind}
+
+Let $\cD_1$ and $\cD_2$ be two distributions which can be sampled in polynomial-time in $\secpar$, and $A$ be a polynomial-time adversary $A$ outputting a single bit. 
+The advantage of $A$ distinguishing $\cD_1$ and $\cD_2$ is defined by
+\[
+	\Adv^{\cD_1, \cD_2}(A,\secparam) = \left| \Prob[A(\cD_1) = 1] - \Prob[A(\cD_2) = 1] \right|.
+\]
+Distributions $\cD_1$ and $\cD_2$ are said to be \emph{computationally indistinguishable} if for any polynomial-time adversary $A$, the advantage of $A$ in distinguishing $\cD_1$ and $\cD_2$, denoted $\Adv^{\cD_1, \cD_2}(A,\secparam)$, is negligible in $\secpar$.
+We denote
+\[
+	\cD_1 \indist \cD_2
+\]
+the fact that $\cD_1$ and $\cD_2$ are computationally indistinguishable.
+Note that two statistically indistinguishable distributions are computationally indistinguishable.
+
+Similarly, we say that two different games $G_0$ and $G_1$, both outputting one bit, are indistinguishable if, for any polynomial-time adversary $A$, the advantage of $A$ in distinguishing $G_0$ and $G_1$, denoted $\Adv^{G_0, G_1}(A,\secparam)$ and defined as
+\[
+	\Adv^{G_0, G_1}(A,\secparam) = \left| \Prob[G_0^A = 1] - \Prob[G_1^A = 1] \right|,
+\]
+is negligible in $\secpar$.
+In this case, we write $G_0 \indist G_1$.
+% paragraph def_comp_ind (end)
+
+\paragraph{Game-based proofs} % (fold)
+\label{par:def_game_based_proofs}
+
+Many of the security notions that we will define and use in this thesis are based on the indistinguishability of two different games $G_0$ and $G_1$.
+Unfortunately, in many cases, we will not be able to directly prove this indistinguishability.
+Instead, we proceed by \emph{game hops}, by constructing a sequence of games, starting with $G_0$, and ending with $G_1$, and proving that consecutive games are indistinguishable.
+The distinguishing advantage between $G_0$ and $G_1$ of an adversary $A$ will then be the sum of the distinguishing advantages of $A$ between every pair of consecutive games in the games sequence. 
+
+
+% paragraph def_game_based_proofs (end)
+
+\paragraph{The Random Oracle Model (ROM)} % (fold)
+\label{par:def_rom}
+
+The Random Oracle Model (or ROM), formally introduced by Bellare and Rogaway in~\cite{CCS:BelRog93}, is a computational model where all parties have access to a (public) random oracle.
+As its name indicates, a random oracle outputs a random string for every new input it is given.
+
+To prove the security of some schemes in the ROM, we often use an additional feature, called \emph{programmability}.
+This feature allows the games to pre-program the output of the random oracle on some inputs, in a way that the programmed random oracle is indistinguishable from a regular random oracle. 
+
+The ROM is a very useful tool to show the security of some schemes.
+However, in practice, random oracles cannot exist (they would require an infinite description), and are often instantiated using hash functions.
+There actually is much debate among cryptographers on the quality of the ROM as an abstraction to analyze the security of cryptosystems~\cite{EPRINT:KobMen15}.
+Yet, for applied and real-world cryptography, it is a widely accepted and widely used model, as there is no convincing evidence that ROM-protocols have non-theoretical security weaknesses.
+
+% paragraph def_rom (end)
+
+% subsection cryptographic_defs (end)
+
+\subsection{Hardness Assumptions} % (fold)
+\label{sub:hardness_assumptions}
+
+Cryptographic primitives rely on the hardness of some mathematical problems.
+We describe here the ones that will be useful for our constructions.
+
+
+\paragraph{The RSA assumption} % (fold)
+\label{par:rsa_assumption}
+
+The RSA assumption, as introduced by Rivest, Shamir and Adleman in~\cite{RSA78} 
+states that it is infeasible to compute the $e$-th root of an element modulo $N$ when $N$ is a product of two large primes, and $e$ is relatively prime with $\varphi(N)$.
+
+Let $\mathsf{RSAGen}$ be defined as the function, which, on input the security parameter $\secparam$, randomly samples two distinct $\secpar$ bits primes $p$ and $q$, computes $N = p \cdot q$, randomly picks an integer $e$ less than and relatively prime to $\varphi(N) = (p-1)(q-1)$, and outputs the pair $(N,e)$.
+For any adversary $A$, let $\advantage{RSA}{A}$ be defined as:
+\[
+	\advantage{RSA}{A} = \Prob[(N,e) \gets \mathsf{RSAGen}(\secparam), y \getsr \ZZ^*_N, x \gets A(\secparam, N,e,y) : x^e = y \bmod N].
+\]
+The RSA problem is supposed hard: for any polynomial-time adversary $A$, $\advantage{RSA}{A}$ is negligible in $\secpar$.
+
+% paragraph rsa_assumption (end)
+
+\paragraph{Discrete Logarithm} % (fold)
+\label{par:discrete_logarithm}
+
+Solving the discrete logarithm problem in the cyclic group $\GG$ with generator $g$, and of order $N$ consists in finding the integer $x \in \ZZ_N$ such that $g^x = h$ for an element $h \in \GG$.
+
+In terms of security games, this can be formalized as follows.
+For any adversary $A$, let $\advantage{DL}{\GG, A}$ be the quantity
+\[
+	\advantage{DL}{\GG, A} = \Prob[h \getsr \GG, x \gets A(\secparam, \GG, g, h) :  g^x = h ].
+\]
+We say that the discrete logarithm is hard in $\GG$ if for all polynomial-time adversary $A$, $\advantage{DL}{\GG, A}$ is negligible in $\secpar$.
+The discrete log is supposed to be hard on large prime order subgroups of $(\FF_p^*, \times)$, and on cyclic subgroups of elliptic curves over finite fields.
+
+% paragraph discrete_logarithm (end)
+
+\paragraph{The Diffie-Hellman Assumptions} % (fold)
+\label{par:def_DH}
+
+A strengthening of the discrete logarithm assumption is the Computational Diffie-Hellman (CDH) assumption.
+It requires that an adversary, given $g^a$ and $g^b$, for $g$ a generator of the group $\GG$ of order $N$, and $a,b \in \ZZ_n$, cannot efficiently compute $g^{a \cdot b}$.
+Formally, for an adversary $A$, we define the advantage $\advantage{CDH}{\GG, A}$ as
+\[
+	\advantage{CDH}{\GG, A} = \Prob[a \getsr \ZZ_N, b \getsr \ZZ_N, h \gets A(\secparam, \GG, g^a, g^b) :  g^{a \dot b} = h ].
+\]
+We say that the CDH assumption is hard in $\GG$ if for all polynomial-time adversary $A$, $\advantage{CDH}{\GG, A}$ is negligible in $\secpar$.
+The CDH assumption is supposed to be hard on large prime order subgroups of $(\FF_p^*, \times)$, and on cyclic subgroups of elliptic curves over finite fields.
+
+A stronger assumption is also very commonly encountered, the decisional version of CDH, called the Decisional Diffie-Hellman (DDH) assumption.
+This time the adversary is asked to distinguish between the triple $(g^a, g^b, g^{a \cdot b})$ and the triple $(g^a, g^b, g^{c})$.
+\[
+	\advantage{DDH}{\GG, A} = 
+				\begin{multlined}[t]
+				\left| \Prob[(a,b) \getsr \ZZ_N^2 : A(\secparam, g^a, g^b, g^{ab}) = 1] \right.\\
+				\left. - \Prob[(a,b,z) \getsr \ZZ_N^3 : A(\secparam, g^a, g^b, g^{z}) = 1] \right|.
+				\end{multlined}
+\]
+We say that the DDH assumption is hard in $\GG$ if for all polynomial-time adversary $A$, $\advantage{DDH}{\GG, A}$ is negligible in $\secpar$.
+The DDH assumption is also supposed to be hard on large prime order subgroups of $(\FF_p^*, \times)$, and on cyclic subgroups of elliptic curves over finite fields.
+
+
+% paragraph def_DH (end)
+
+\paragraph{Cryptographic Pairings} % (fold)
+\label{par:def_pairings}
+
+We will require that bilinear groups satisfy a hardness assumption called the Decisional Bilinear Diffie-Hellman (DBDH) assumption~\cite{EC:BonBoy04b}.
+This assumption requires that a bounded adversary cannot distinguish the tuple $(g, g^a, g^b, g^c, e(g,g)^{abc})$ from the tuple $(g, g^a, g^b, g^c, e(g,g)^z)$, where $a$, $b$, $c$ and $z$ are randomly generated. 
+
+Formally, for a bilinear group $(\GG_1, \GG_2, \GG_T, e)$, the advantage $\advantage{DBDH}{\GG_1, \GG_2, \GG_T, e, A}$ of an adversary $A$ in the Decisional Bilinear Diffie-Hellman game is defined as:
+% \begin{align*}
+% 	\advantage{BDH}{\GG_1, \GG_2, \GG_T, e, A} =
+% 		 		& \left| \Prob[(a,b,c) \getsr \ZZ_N^3 : A(\secparam, g^a, g^b, g^c, e(g,g)^{abc}) = 1] \right.\\
+% 				& \tab \left. - \Prob[(a,b,c,z) \getsr \ZZ_N^4 : A(\secparam, g^a, g^b, g^c, e(g,g)^{z}) = 1] \right|.
+% \end{align*}
+\[
+	\advantage{DBDH}{\GG_1, \GG_2, \GG_T, e, A} = 
+				\begin{multlined}[t]
+				\left| \Prob[(a,b,c) \getsr \ZZ_N^3 : A(\secparam, g^a, g^b, g^c, e(g,g)^{abc}) = 1] \right.\\
+				\left. - \Prob[(a,b,c,z) \getsr \ZZ_N^4 : A(\secparam, g^a, g^b, g^c, e(g,g)^{z}) = 1] \right|.
+				\end{multlined}
+\]
+The bilinear group is said to be secure if, for all polynomial-time adversary $A$, $\advantage{DBDH}{\GG_1, \GG_2, \GG_T, e, A}$ is negligible in $\secpar$.
+
+
+Note that, in this definition, we only considered the symmetric setting for the bilinear group, but that the definition can trivially be adapted to an asymmetric pairing.
+In practice, cryptographic pairings are instantiated using elliptic curves, and we will use Type-3 pairings only.
+We refer to~\cite{EPRINT:GalPatSma06} for more details on pairings.
+
+% subsection def_pairings (end)
+
+
+% subsection hardness_assumptions (end)
+
+% section cryptographic_preliminaries (end)

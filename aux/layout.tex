@@ -1,0 +1,270 @@
+% !TEX root = ../master.tex
+
+\documentclass{scrbook}
+
+
+% -------------------------------------------------------------------------
+% General KOMA options
+% -------------------------------------------------------------------------
+
+\KOMAoption{fontsize}       {11pt}
+\KOMAoption{twoside}        {true}
+\KOMAoption{BCOR}           {5mm}
+\KOMAoption{DIV}            {12}
+
+
+\KOMAoption{toc}            {bibliography,listof}
+
+\KOMAoption{headings}       {big}
+\KOMAoption{chapterprefix}  {true}
+\KOMAoption{appendixprefix} {true}
+
+\setkomafont{disposition}{\normalfont\bfseries}
+
+\usepackage[dvipsnames]{xcolor}
+\definecolor{halfgray}{gray}{0.55} % chapter numbers will be semi transparent .5 .55 .6 .0
+
+
+% -------------------------------------------------------------------------
+% Headings
+% -------------------------------------------------------------------------
+
+\usepackage[automark,headsepline]{scrlayer-scrpage} 
+\pagestyle{scrheadings} 
+\ihead[]{\headmark}
+% \ihead[]{}
+% \chead[]{}
+\ohead[]{\pagemark}
+\ifoot[]{}
+% \cfoot[---~~\pagemark~~---]{}
+\ofoot[]{}
+
+
+% \makeatletter
+% \renewcommand{\chapterlinesformat}[3]{% Redefine the running head
+% 	\@hangfrom{#2}{#3}%
+% }
+% \renewcommand{\chapterlineswithprefixformat}[3]{% Redefine the running head (with the Chapter/Appendix prefix)
+% 	#2#3%
+% }
+% \makeatother
+
+% \renewcommand*{\chaptermarkformat}{% Redifine the way the chapter number is displayed
+% \chapappifchapterprefix{\ }\thechapter\autodot:\enskip
+% }
+
+
+
+% -------------------------------------------------------------------------
+% Chapter thumbs
+% -------------------------------------------------------------------------
+
+\nottoggle{draft}{
+
+\usepackage{aux/chapterthumb}
+\renewcommand*{\chapterthumbheight}{4em}
+\renewcommand*{\chapterthumbboxcolor}{gray}%
+\renewcommand*{\chapterthumbformat}{\thechapter}
+\renewcommand*{\chapterthumbwidth}{.1\paperheight}%
+\renewcommand*{\firstchapterthumbskip}{1in}
+\setkomafont{chapterthumb}{\normalfont\LARGE}
+
+\AddLayersToPageStyle{@everystyle@}{chapterthumb}
+
+}{}
+
+% -------------------------------------------------------------------------
+% Epigraph
+% -------------------------------------------------------------------------
+
+\usepackage{epigraph}
+\renewcommand{\beforeepigraphskip}{6cm}
+\renewcommand{\epigraphflush}{flushleft}
+\setlength{\epigraphrule}{0pt}
+\newcommand{\myepigraph}[3]{\epigraph{#1}{%
+\vspace{0.5cm}\textit{#2}
+\ifx#2\empty
+\else
+\ifx#3\empty
+\else
+ --
+\fi
+\fi \textsc{#3}}
+}
+
+% -------------------------------------------------------------------------
+% Chapter title layout
+% -------------------------------------------------------------------------
+
+% \newfont{\chapterNumber}{eurb10 scaled 7000} % Font the chapter number
+
+\makeatletter
+
+\def\@makechapterhead#1{%
+    \vspace*{10\p@}%
+	{
+	\raggedleft{
+	\begin{tabular}{cc}
+		\begin{minipage}[b]{0.8 \textwidth}
+			\raggedleft{ \Huge \bfseries #1 \par}
+		\end{minipage}
+	  % & \huge \color{halfgray}\chapterNumber\thechapter
+	  & \huge \color{halfgray}\fontsize{4cm}{4.5cm}\selectfont\thechapter
+	\end{tabular}
+	}
+        \vskip 30\p@
+	}
+}
+
+\def\@makeschapterhead#1{%
+    \vspace*{10\p@}%
+	{
+	\raggedleft{
+	\begin{tabular}{cc}
+		\begin{minipage}[b]{0.8 \textwidth}
+			\raggedleft{ \Huge \bfseries #1 \par}
+		\end{minipage}
+	  % & \huge \color{halfgray}\chapterNumber\thechapter
+	  & \begin{minipage}[b]{1cm}
+			\vspace{3cm}
+		\end{minipage}
+	\end{tabular}
+	}
+	
+	% % \raggedleft{
+	% 		\raggedleft{ \Huge \bfseries #1 \par}
+	% % }
+        \vskip 30\p@
+	}
+}
+
+\makeatother
+
+\newcommand{\blankdoublepage}{%
+\clearpage
+\ifodd\value{page}%
+\thispagestyle{empty}\hbox{}\newpage%
+\fi
+}
+
+\newcommand{\chapternoquoteNoStar}[1]%
+{%
+\cleartoevenpage[\thispagestyle{empty}]%
+\chapter{#1}
+}
+
+\newcommand{\chapterquoteNoStar}[4]%
+{%
+\cleartoevenpage[\thispagestyle{empty}]%
+\thispagestyle{empty}
+\hbox{}
+\myepigraph{#2}{#3}{#4}
+
+\chapter{#1}
+}
+
+\newcommand{\chapternoquoteStar}[1]%
+{%
+\cleartoevenpage[\thispagestyle{empty}]%
+\chapter*{#1}
+}
+
+\newcommand{\chapterquoteStar}[4]%
+{%
+\cleartoevenpage[\thispagestyle{empty}]%
+\thispagestyle{empty}
+\hbox{}
+\myepigraph{#2}{#3}{#4}
+
+\chapter*{#1}
+}
+
+\makeatletter
+\newcommand{\chapterquote}{%
+             \@ifstar
+                  \chapterquoteStar%
+                  \chapterquoteNoStar%
+}
+
+\newcommand{\chapternoquote}{%
+             \@ifstar
+                  \chapternoquoteStar%
+                  \chapternoquoteNoStar%
+}
+\makeatother
+
+% -------------------------------------------------------------------------
+% Lettrine
+% -------------------------------------------------------------------------
+
+
+\usepackage{lettrine}
+% \usepackage{aux/Typocaps}
+% \usepackage{yfonts}
+% \usepackage{oldgerm}
+\input Typocaps.fd
+\newcommand*\initfamily{\usefont{U}{Typocaps}{xl}{n}}
+
+\usepackage{anyfontsize}
+
+
+\renewcommand*{\DefaultLoversize}{.2}
+\setlength{\DefaultFindent}{1pt}
+\setlength{\DefaultNindent}{0em}
+
+% \newcommand{\enluminure}[2]{\lettrine[lines=3]{\small \initfamily #1}{#2}}
+\newcommand{\enluminure}[2]{\lettrine[lines=3]{\fontsize{35}{60}\initfamily #1}{#2}}
+
+
+% -------------------------------------------------------------------------
+% Microtype
+% -------------------------------------------------------------------------
+\nottoggle{draft}{
+\usepackage{microtype}
+}{}
+
+% -------------------------------------------------------------------------
+% Bibliography
+% -------------------------------------------------------------------------
+\onlyif{biblatex}{
+\usepackage[hyperref=true, 
+			style=alphabetic,
+			% sorting=nyt, 
+			minalphanames=3, 
+			maxalphanames=4, 
+			mincitenames=3, 
+			maxcitenames=4, 
+			minbibnames=1, 
+			maxbibnames=99, 
+			backend=biber, 
+			safeinputenc, 
+			doi=false, 
+			refsegment=chapter, 
+			backref=true
+			]{biblatex}
+
+\DeclareFieldFormat[inbook,thesis,inproceedings]{title}{\mkbibemph{#1}\addperiod} % italic title with period
+% \DeclareFieldFormat[article]{title}{#1} % title of journal article is printed as normal text
+\nottoggle{printversion}{
+\DeclareFieldFormat{url}{\href{#1}{Link}.\space}
+% \DeclareFieldFormat[misc]{note}{\href{#1}{Link}.\space} % For ePrint
+}{}
+}
+% -------------------------------------------------------------------------
+% Overfull rule
+% -------------------------------------------------------------------------
+
+
+\iftoggle{showoverflow}{
+  \overfullrule=10pt
+}{}
+
+% -------------------------------------------------------------------------
+% ToC rule
+% -------------------------------------------------------------------------
+
+\newcommand*{\addtocrule}{%
+\addtocontents{toc}{\ \par}%
+\addtocontents{toc}{\hfill \rule[0.2em]{0.7\textwidth}{.4pt}\hfill}%
+\addtocontents{toc}{\ \par}%
+}

@@ -1,0 +1,384 @@
+% !TEX root = definitions_master.tex
+
+\section{Cryptographic Primitives} % (fold)
+\label{sec:cryptographic_primitives}
+
+In this Section, we describe and define all the cryptographic primitives that we will use throughout this thesis.
+Completely formal definitions of most of these objects can be found in~\cite{BOOK:Goldreich04}.
+We often adopt here a simplified formulation.
+
+\subsection{Pseudorandom Function (PRF)} % (fold)
+\label{sub:def_prf}
+
+A pseudorandom function is a function that is indistinguishable from a truly random function.
+More formally, let $F: \cK \times \cD \rightarrow \cR$ be a polynomial-time computable map, where $\cK$ and $\cR$ are finite. 
+$\cK$ is the \emph{key space} of $F$, and $\cD$ its domain, while $\cR$ is the range of $F$.
+For $K \in \cK$, we denote $F_K$ the function that is the partial evaluation of $F$ on $K$, namely
+\begin{align*}
+	F_K : \cD &\rightarrow \cR \\
+		x &\mapsto F(K,x)
+\end{align*}
+Hence, $F$ can be seen as a \emph{function family}. 
+
+\begin{definition}[Pseudorandom function]
+	\label{def:prf}
+	Let $F: \cK \times \cD \rightarrow \cR$ be a function family, and $\mathsf{Func}(\cD,\cR)$ the set of all functions of domain $\cD$ and range $\cR$.
+	The pseudorandom function distinguishing advantage $\advantage{prf}{A, F}$ of $A$ against $F$ is defined as
+	\[
+		\advantage{prf}{F,A} = \left| \Prob[K \getsr \cK : A^{F_K(\cdot)}(\secparam) = 1] 
+												- \Prob[\pi \getsr \mathsf{Func}(\cD,\cR) : A^{\pi(\cdot)}(\secparam) = 1] \right|.
+	\]
+	The PRF advantage function of $F$ is defined as follows. For any integers $t,q$,
+	\[
+		\advantage{prf}{F}[(\secpar, t, q)] = \max_{A} \advantage{prf}{F, A}
+	\]
+	where the maximum is taken over all adversary $A$ with time complexity $t$, making at most $q$ oracle queries.
+	$F$ is said to be a pseudorandom function if $\advantage{prf}{F,A}$ is negligible in $\secpar$ for any polynomial-time adversary $A$.
+\end{definition}
+
+
+
+
+% paragraph prf_switching_lemma (end)
+
+
+% subsection def_prf (end) 
+
+\subsection{Constrained Pseudorandom Function (CPRF)} % (fold)
+\label{sub:def_cprf}
+
+The idea of \emph{constrained PRFs} (CPRF) has been introduced in concurrent work by Boneh and Waters, Boyle \emph{et al.}, and Kiayias \emph{et al.}~\cite{AC:BonWat13,PKC:BoyGolIva14,CCS:KPTZ13}.
+A constrained PRF is associated with a family of boolean circuits $\cC = \{C\}$.
+The holder of the master PRF key is able to compute a \emph{constrained key} $K_C$ corresponding to a circuit $C \in \cC$; the constrained key $K_C$ allows evaluation of the PRF on inputs $x$ such that $C(x) = 1$, but only on these inputs.
+
+More formally, a \emph{constrained PRF} $F$  with respect to a circuit family $\cC$ is a mapping $F: \cK \times \cD \rightarrow \cR$, together with a pair of algorithms $(F.\mathsf{Constrain}, F.\mathsf{Eval})$, defined as follows.
+\begin{itemize}
+	\item $F.\mathsf{Constrain}(K,C)$ is a PPT algorithm taking as input a key $K \in \cK$ and a circuit $C \in \cC$. It outputs a constrained key $K_C$.
+	
+	\item $F.\mathsf{Eval}(K_C,x)$ is a deterministic polynomial-time algorithm taking as input a constrained key $K_C$ for circuit $C$, and $x \in \cD$. It outputs $y \in \cR$.
+\end{itemize}
+
+Wherever this does not result in ambiguity, we may leave out $\mathsf{Eval}$ and write $F.\mathsf{Eval}(K_C,x)$ as $F(K_C,x)$.
+
+\paragraph*{Correctness.} % (fold)
+A CPRF $F$ is correct if and only if, $C(x) = 1$ implies $F(K,x) = F.\mathsf{Eval}(K_C,x)$, where $K_C = F.\mathsf{Constrain}(K,C)$, for all $K \in \cK$, $x \in \cD$, and $C \in \cC$.
+
+\paragraph*{Security Definition.} % (fold)
+\label{par:cprf_security}
+The security properties of a constrained PRF can be formalized using a security game $G_{\subgamestyle{cprf}}$ described in Figure~\ref{fig:game_cprf}.
+Informally, the adversary $A$ wins the game (the game outputs 1) when he is able to distinguish between real evaluations of $F$ and truly random elements of $\cR$ on inputs such that he never queried a constrained key $K_C$ for a circuit $C$ evaluating to $1$ on these inputs. 
+The formal definition follows.
+
+\subimport{figs/}{fig_cprf_sec}
+
+\begin{definition}[Constrained PRF]
+	Let $F$ be a constrained function as defined previously.
+	We define $\advantage{cprf}{F,A}$, the advantage of the adversary $A$ in the constrained PRF security game, as
+	\[
+		\advantage{cprf}{F,A} = \Prob[G_{\subgamestyle{cprf}}^A(\secparam) = 1].
+	\]
+	We say that $F$ is a constrained pseudorandom function if, for any polynomial-time adversary $A$, $\advantage{cprf}{F,A}$ is negligible in the security parameter $\secpar$.
+\end{definition}
+
+% paragraph cprf_security (end)
+
+% subsection def_cprf (end) 
+
+\subsection{Pseudorandom Permutation (PRP)} % (fold)
+\label{sub:def_prp}
+
+A pseudorandom permutation is a permutation that is indistinguishable from a truly random permutation.
+Let $F: \cK \times \cD \rightarrow \cR$ be a function family.
+We say that $F$ is a family of permutation if for every $K \in \cK$, $F_K$ is a bijection between $\cD$ and $\cR$.
+Here, we will always be in the case where $\cD = \cR$.
+
+\begin{definition}[Pseudorandom permutation]
+	\label{def:prp}
+	Let $F: \cK \times \cD \rightarrow \cD$ be a permutation family, and $\mathsf{Perm}(\cD)$ the set of all permutations of $\cD$.
+	The pseudorandom function distinguishing advantage $\advantage{prp}{F, A}$ of $A$ against $F$ is defined as
+	\[
+		\advantage{prp}{F, A} = \left| \Prob[K \getsr \cK : A^{F_K(\cdot)}(\secparam) = 1] 
+												- \Prob[\pi \getsr \mathsf{Perm}(\cD) : A^{\pi(\cdot)}(\secparam) = 1] \right|.
+	\]
+	The PRF advantage function of $F$ is defined as follows. For any integers $t,q$,
+	\[
+		\advantage{prp}{F}[(\secpar, t, q)] = \max_{A} \advantage{prp}{F, A}
+	\]
+	where the maximum is taken over all adversary $A$ with time complexity $t$, making at most $q$ oracle queries.
+	$F$ is said to be a pseudorandom permutation if $\advantage{prp}{F, A}$ is negligible in $\secpar$ for any polynomial-time adversary $A$.
+\end{definition}
+
+\paragraph{PRF switching lemma.} % (fold)
+\label{par:prf_switching_lemma}
+
+It will be useful in the security proofs to be able to switch from a PRP to a PRF (to avoid considering non-collision among the PRP outputs).
+To do so, we will use the PRF switching lemma that states that a PRP is also a PRF. We refer the reader to~\cite[Lemma 1]{EC:BelRog06} for the proof.
+\begin{lemma}
+	\label{lem:switching_lemma}
+	Let $F$ be a PRP over the set $\cD$.
+	For any adversary $A$ making at most $q$ queries, 
+	\[
+		\left| \advantage{prf}{F, A} - \advantage{prp}{F, A} \right| \leq \frac{q^2}{2 |\cD|}.
+	\]
+\end{lemma}
+
+% subsection def_prp (end)
+
+\subsection{Trapdoor Permutation (TDP)} % (fold)
+\label{sub:def_tdp}
+
+Informally, a trapdoor permutation (TDP) $\lpi$ is a permutation over a set $\cM$ such that, using a public key $\PK$, $\lpi$ can be easily evaluated, but the inverse $\lpi^{-1}$ can be efficiently computed only with the secret $\SK$.
+
+More formally, a family of trapdoor permutations over a set $\cM$ is a triple $\lpi$ of algorithms $(\KeyGen,\allowbreak \Eval, \allowbreak \Invert)$ such that:
+\begin{itemize}
+	\item $\KeyGen$ is a randomized algorithm taking as input the security parameter $\secparam$ that generates a pair $(\SK, \PK)$, where $\SK$ is the private key and $\PK$ the public key;
+	
+	\item $\Eval$ is a deterministic polynomial-time algorithm taking as inputs a public key and an element in $\cM$, and such that for every public key $\PK$ generated by $\KeyGen$, $\lpi(\PK,.)$ is a bijection over $\cM$;
+	
+	\item $\Invert$ is a deterministic polynomial-time algorithm taking as inputs a secret key and an element in $\cM$, such that for every key pair $(\PK,\SK)$ generated by $\KeyGen$, 
+	\[\Invert(\SK, \Eval(\PK, x)) = x.\]
+\end{itemize}
+In the following, will simplify the notations, and use $\lpi_{\PK}(\cdot)$ to denote $\Eval(\PK,\cdot)$ and $\lpi^{-1}_{\SK}(\cdot)$ for $\Invert(\SK,\cdot)$.
+
+
+
+\begin{definition}[Secure trapdoor permutation]
+	\label{def:tdp}
+For an adversary $A$, the advantage $\advantage{tdp}{\lpi,A}$ of $A$ in the trapdoor permutation security game is defined as
+\[
+	\advantage{tdp}{\lpi,A} = \Pr[ y \getsr \cM, (\SK,\PK) \gets \KeyGen(\secparam), x \gets A(\secparam, \PK,y) : \lpi_\PK(x) = y ].
+\]
+For any integer $t$, $\advantage{tdp}{\lpi}[(\secpar, t)]$ is defined as
+	\[
+		\advantage{tdp}{\lpi}[(\secpar, t)] = \max_{A} \advantage{tdp}{\lpi, A}
+	\]
+	where the maximum is taken over all adversary $A$ with time complexity $t$.
+The trapdoor permutation $\lpi$ is said to be a secure if, for any polynomial-time adversary $A$, $\advantage{OW}{\lpi,A}$ is negligible in $\secpar$.
+\end{definition}
+
+We also use the notation $\lpi^{(c)}_\PK(x)$ (resp. $\lpi^{(-c)}_\SK(x)$) for
+the iterated application of $\lpi_\PK$ (resp. $\lpi^{-1}_\SK$) $c$ times.
+
+
+% subsection def_tdp (end)
+
+\subsection{Hash Function} % (fold)
+\label{sub:def_hash}
+
+A hash function family is a polynomial-time computable map $H: \cK \times \cD \rightarrow \cR$ where $\cK$ and $\cR$ are non-empty sets.
+We denote the partial evaluation of $H$ on $K$ as $H_K(\cdot)$. 
+For hash functions, we are interested in the difficulty with which an adversary is able to find to distinct elements in $\cD$ evaluating to the same elements in $\cR$.
+
+\begin{definition}
+	\label{def:hash_col}
+	Let $H: \cK \times \cD \rightarrow \cR$ be a hash function family.
+	For every adversary $A$, we define
+	\[
+		\advantage{col}{H,A} = \Prob[K \getsr \cK, (M,M') \gets A(K) : M \neq M' \wedge H_K(M) = H_K(M')].
+	\]
+	$H$ is said to be collision-resistant family of hash function if, for any polynomial-time adversary $A$, $\advantage{col}{H,A}$ is negligible in $\secpar$.
+\end{definition}
+In practice, we only have access to a single element of the hash function family, which is denoted $H$.
+
+\paragraph{Instantiating the ROM.} % (fold)
+\label{par:rom_instantiation}
+
+Often, the random oracle used in the ROM (cf. Section~\ref{par:def_rom}) will be instantiated using a hash function.
+Unfortunately, many hash functions share undesirable properties (\emph{e.g.} length-extension attacks) that make them unfit for such direct use as a random oracle.
+Instead, we will use the $\HMAC$ construction~\cite{C:BelCanKra96} with a public key as the random oracle.
+For a hash function $H$, $\HMAC$ is defined as
+\[
+	\HMAC{}(K,x) = H( (K \xor opad) || H( (K \xor ipad) || x))
+\]
+where $opad$ and $ipad$ are two constants.
+
+% paragraph rom_instantiation (end)
+
+\paragraph{(Multi)set hashing.} % (fold)
+\label{par:def_set_hashing}
+
+In the case $\cD$ is a set of sets, it would be nice to be able to easily compute the hash of $S \cup S'$ from the hashes of $S$ and $S'$.
+Multiset hashing was introduced by Clarke \emph{et al.}~\cite{AC:CDDGS03}, based on the framework proposed by Bellare and Micciancio~\cite{EC:BelMic97} for incremental hashing. 
+Here, we slightly extend their definition so it fits our needs in this thesis.
+
+
+A \emph{set hashing function} on sets of elements in $\cD$ is a quadruple of probabilistic polynomial algorithms $(\mathcal{H},\equiv_\mathcal{H}, +_\mathcal{H}, -_\mathcal{H})$ such that 
+$\mathcal{H} : \cP(\cD) \rightarrow \cR$ maps sets whose elements are in $\cD$, and for all $S \subset \cP(\cD)$, 
+\begin{itemize}
+	\item $\mathcal{H}(S) \equiv_\mathcal{H} \mathcal{H}(S)$ (comparability) 
+	\item $\forall x \in \cD \setminus S$, $\mathcal{H}(S \cup \{x\} ) \equiv_\mathcal{H} \mathcal{H}(S) +_\mathcal{H} \mathcal{H}(\{x\})$ (insertion incrementality)
+	\item $\forall x \in S$, $\mathcal{H}(S \setminus \{x\} ) \equiv_\mathcal{H} \mathcal{H}(S) -_\mathcal{H} \mathcal{H}(\{x\})$ (deletion incrementality)
+\end{itemize}
+We want multiset hash functions to be secure in the sense of collision resistance: it is infeasible for an adversary to find two sets hashing to the same value.
+
+\begin{definition}
+	Let $\mathcal{H}$ be a set hashing function.
+	For every adversary $A$, we define
+	\[
+		\advantage{col}{\cH, A} = \Prob[(S,S') \gets A^{\mathcal{H}(\cdot),\equiv_\mathcal{H}(\cdot), +_\mathcal{H}(\cdot), -_\mathcal{H}(\cdot)}(\secparam) : S \neq S' \wedge \cH(S) \equiv_{\cH} \cH(S')].
+	\]
+\end{definition}
+
+The $\mathtt{MSet\texttt{-}Mu\texttt{-}Hash}$ construction of Clark \emph{et al.}~\cite{AC:CDDGS03} for multisets works as follows: if $H$ is a regular (\emph{i.e.} non incremental) hash function, $\mathcal{H}({x_1^{m_1},\dots,x_n^{m_n}})$ is defined as $\prod H(x_i)^{m_i}$ ($x_i^{m_i}$ represents the element $x_i$ with multiplicity $m_i$).
+Formally, $\mathtt{MSet\texttt{-}Mu\texttt{-}Hash}$ is defined as follows:
+\begin{align*}
+	\mathcal{H}(M) 
+	: \cP(\cD) &\rightarrow \mathbb{F}_q \\
+	  M &\mapsto \Pi_{x \in \cD} H(x)^{M_x}
+\end{align*}
+where $H : \cD \rightarrow \mathbb{F}_q$ is a hash function from the set $\cD$ to the field $\mathbb{F}_q$, and $M_x$ is the multiplicity of $x$ in $M$.
+This construction clearly fits our functional needs: for $S \subset \cD$, we can easily compute (\emph{i.e.} in constant time) $\mathcal{H}(S \cup \{x\})$ (resp. $\mathcal{H}(S \setminus \{x\})$) from $\mathcal{H}(S)$ and $\cH(\{x\}) = H(x)$ --- or even from $x$ if we have access to $H$ --- 
+as $\mathcal{H}(S \cup \{x\}) = \mathcal{H}(S) \cdot H(x)$ (resp. $\mathcal{H}(S \setminus \{x\}) = \mathcal{H}(S) \cdot H(x)^{-1}$).
+
+Clarke \emph{et al.} show that $\mathcal{H}$ is collision resistant as long as the discrete log assumption holds in $\mathbb{F}_q$ when $H$ is modeled as a random oracle.
+\begin{theorem}[Theorem~2 of~\cite{AC:CDDGS03}]
+	If the discrete log assumption holds in $\mathbb{F}_q$, and $H$ is a (non-programable) random oracle, the multiset hash function $\mathcal{H}$ is collision resistant.
+\end{theorem}
+Note that multiset hashing can also be based on elliptic curves for improved efficiency~\cite{CJ:MaiTibAra16}.
+The security of the construction would immediately follow, using the hardness of discrete logarithm on cyclic subgroups of elliptic curves 
+instead of its hardness on finite fields.
+
+% paragraph def_set_hashing (end)
+
+% subsection def_hash (end)
+
+\subsection{Semantically Secure Encryption} % (fold)
+\label{sub:def_encryption}
+
+A (symmetric) encryption scheme $SE$ is a triple of algorithms $(\KeyGen, \Enc, \Dec)$.
+The randomized key generation algorithm $\KeyGen$ takes as input the security parameter in its unary form and outputs a key $K$ from the key set $\cK$.
+The encryption algorithm $\Enc$ takes a key and a plaintext $m$ in the message space $\cM$ and outputs a ciphertext $c \gets \Enc(K,m)$ from the ciphertext space $\cC$. Note that $\Enc$ can be either randomized or deterministic.
+The decryption algorithm is deterministic, and as input a key $K$ and a string $c$, and outputs either an element $m \in \cM$ or the symbol $\bot$.
+
+In the following, we will only consider \emph{correct} schemes, that is schemes such that, for all keys $K \in \cK$, and all messages $m \in \cM$, 
+\[
+	\Dec(K,\Enc(K,m)) = m.
+\]
+
+Many security definitions have been developed for (symmetric) encryption.
+Here we will consider indistinguishability against chosen plaintext attacks (\indcpa).
+More precisely, we use the Left-Or-Right ($\pcnotionstyle{LOR\pcmathhyphen{}CPA}$) definition, as given by Bellare \emph{et al.}~\cite{FOCS:BDJR97}.
+
+\begin{definition}
+	\label{def:ind-cpa}
+	Let $SE = (\KeyGen, \Enc, \Dec)$ be a symmetric encryption scheme.
+	For $b \in \zo$, we define $\mathsf{LoR}$ as
+	\[
+		\mathsf{LoR}(x_0,x_1,b) = x_b.
+	\]
+	For an adversary $A$, the $\indcpa$ advantage of $A$ against $SE$ is
+	\[
+		\advantage{cpa}{SE,A} = 
+		\begin{multlined}[t]
+		\left|  \Prob[K \getsr \KeyGen(\secparam) :  A^{\Enc_K(\mathsf{LoR}(\cdot,\cdot,0)}(\secparam) = 1] \right. \\
+			 \left. - \Prob[ K \getsr \KeyGen(\secparam) :  A^{\Enc_K(\mathsf{LoR}(\cdot,\cdot,1)}(\secparam) = 1 ] \right|,
+			 \end{multlined}
+	\]
+	with the restriction that $A$ must only query the oracle $\Enc_K(\mathsf{LoR}(\cdot,\cdot,b)$ with pairs of messages of equal length.
+	The $\indcpa$ advantage function of $SE$ is defined as follows. For any integers $t,q, \mu$,
+	\[
+		\advantage{cpa}{SE}[(\secpar, t, q, \mu)] = \max_{A} \advantage{cpa}{SE, A}
+	\]
+	where the maximum is taken over all adversary $A$ with time complexity $t$, making at most $q$ oracle queries on messages of total length at most $\mu$.
+	$SE$ is said to be a $\indcpa$-secure if $\advantage{cpa}{SE, A}$ is negligible in $\secpar$ for any polynomial-time adversary $A$.
+\end{definition}
+
+
+
+In practice, we will suppose that $\cK = \zo^{\secpar}$, and $\cM = \cC = \zo^*$, unless otherwise specified.
+Also, the $\KeyGen$ algorithm will just pick a key in $\cK$ uniformly at random.
+
+% subsection def_encryption (end)
+
+\subsection{Message Authentication Code (MAC)} % (fold)
+\label{sub:def_mac}
+
+A message authentication code is used to ensure that a message comes from the right sender.
+It is a triple of algorithms $(\KeyGen, \mac, \verify)$.
+The randomized key generation algorithm $\KeyGen$ takes as input the security parameter in its unary form and outputs a key $K$ from the key set $\cK$.
+The algorithm $\mac$ takes as input $K \in \cK$ and a string $m \in \zo^*$ and outputs a tag $T \in \zo^{\secpar}$.
+Finally $\verify$, on input a key $K$, a string $m$ and a tag $T$, outputs $\bot$ or $\top$.
+
+We require that a MAC is correct, namely that for all $K \in \cK$, and all string $m \in \zo$,
+\[
+	\verify(K,m,\MAC(K,m)) = \top.
+\]
+The security requirement of a MAC will be that it is infeasible for any polynomial-time adversary to forge a valid tag without the secret key.
+
+\subimport{figs/}{fig_cma}
+
+\begin{definition}
+	\label{def:uf_cma}
+	
+	Let $(\KeyGen, \MAC, \verify)$ be a message authentication code.
+	The advantage of $A$ in the existential forgery with chosen messages attack game ($\EFCMA$), $\advantage{\efcma}{A, \MAC}$, is defined as
+	\[
+		\advantage{\efcma}{\MAC,A} = \Prob[G_{\subgamestyle{\efcma}}^A(\secparam) = 1].
+	\]
+	were the $G_{\subgamestyle{\efcma}}$ is described in Figure~\ref{fig:game_cma}.
+	The $\EFCMA$ advantage function is defined as follows. For any integers $t,q, \mu$,
+	\[
+		\advantage{\efcma}{\MAC}[(\secpar, t, q, \mu)] = \max_{A} \advantage{\efcma}{\mac, A}
+	\]
+	where the maximum is taken over all adversary $A$ with time complexity $t$, making at most $q$ oracle queries on messages of total length at most $\mu$.
+	$\mac$ is said to be a $\EFCMA$-secure if $\advantage{\efcma}{\mac, A}$ is negligible in $\secpar$ for any polynomial-time adversary $A$.	
+\end{definition}
+
+The most handy and practical way to instantiate a MAC is to use a PRF with variable input length, \emph{i.e.} with domain $\cD$.
+For such a PRF $F$, we will define $\MAC$ and $\verify$ as
+\begin{align*}
+	\MAC(K,x) &= F(K,x) \\
+	\verify(K,x,t) &=
+		\left \{
+		\begin{aligned}
+			\top & \text{ if } F(K,x) = t \\
+			\bot & \text{ otherwise.}
+		\end{aligned}
+		\right.
+\end{align*}
+
+% subsection def_mac (end)
+
+\subsection{Authenticated Encryption with Associated Data (AEAD)} % (fold)
+\label{sub:def_aead}
+
+Using authenticated encryption with associated, one is able to ensure both the confidentiality of a message and the authenticity of the message plus some optional additional data.
+Am AEAD scheme $SE$ is a triple of algorithms $(\KeyGen, \Enc, \Dec)$.
+
+The randomized key generation algorithm $\KeyGen$ takes as input the security parameter in its unary form and outputs a key $K$ from the key set $\cK$.
+The encryption algorithm $\Enc$ takes a key, an optional string $a$ called additional data, and a plaintext $m$ in the message space $\cM$ and outputs a ciphertext $c \gets \Enc(K,a,m)$ from the ciphertext space $\cC$.
+The decryption algorithm is deterministic, and as input a key $K$, the (optional) additional data $a$, and a string $c$, and outputs either an element $m \in \cM$ or the symbol $\bot$.
+
+In the following, we will only consider \emph{correct} schemes, that is schemes such that, for all keys $K \in \cK$, all string $a \in \zo^*$, and all messages $m \in \cM$, 
+\[
+	\Dec(K,a,\Enc(K,a,m)) = m.
+\]
+
+
+\begin{definition}
+	\label{def:aead_sec}
+	Let $SE = (\KeyGen, \Enc, \Dec)$ be an authenticated encryption scheme with additional data.
+	For an adversary $A$, the $\pcnotionstyle{AE}$ advantage of $A$ against $SE$ is
+	\[
+		\advantage{ae}{SE, A} = 
+			\left|
+			\Prob[K \getsr \KeyGen(\secparam) :  A^{\Enc_K(\cdot,\cdot), \Dec_K(\cdot,\cdot,\cdot)}(\secparam) = 1]
+			- \Prob[  A^{\$(\cdot,\cdot), \bot(\cdot,\cdot,\cdot)}(\secparam) = 1 ] \right|
+	\]
+	
+	where $\$$ is an oracle that, on input $(a,m)$, picks a random string $r$ of size $|m|$ and returns $\Enc_K(a,r)$ and $\bot$ is the oracle always returning the symbol $\bot$.
+
+	The $\pcnotionstyle{AE}$ advantage function of $SE$ is defined as follows. For any integers $t,q_e, \mu_e, q_d, \mu_d$,
+	\[
+		\advantage{ae}{SE}[(\secpar, t, q_e, \mu_e, q_d, \mu_d)] = \max_{A} \advantage{ae}{SE, A}
+	\]
+	where the maximum is taken over all adversary $A$ with time complexity $t$, making at most $q_e$ (resp. $q_d$) encryption (resp. decryption) oracle queries on messages of total length at most $\mu_e$ (resp. $\mu_d$).
+	$SE$ is said to be a secure AEAD if $\advantage{ae}{SE, A}$ is negligible in $\secpar$ for any polynomial-time adversary $A$.
+\end{definition}
+
+Again, in practice, we will suppose that $\cK = \zo^{\secpar}$, and $\cM = \cC = \zo^*$, unless otherwise specified, and that the $\KeyGen$ algorithm will just pick a key in $\cK$ uniformly at random.
+
+
+% subsection def_aead (end)
+
+% section cryptographic_primitives (end)

@@ -1,0 +1,21 @@
+% !TEX root = ../master.tex
+
+
+\iftoggle{introduction_chapter}{
+\subimport{introduction/}{introduction_master.tex}
+}{}
+
+\iftoggle{definitions_chapter}{
+\subimport{definitions/}{definitions_master.tex}
+}{}
+
+\iftoggle{conclusion_chapter}{
+\subimport{conclusion/}{conclusion_master.tex}
+}{}
+
+%\input{conclusion}
+
+
+\appendix
+
+%\input{appendix}

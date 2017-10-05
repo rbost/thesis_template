@@ -1,0 +1,26 @@
+% !TEX root = ../content.tex
+
+\begin{otherlanguage}{frenchb}
+\chapternoquote*{Résumé en Français} % (fold)
+\label{cha:resume_fr}
+\addstarredchapter{\nameref{cha:resume_fr}} % for minitoc in a starred chapter
+\chaptermark{Résumé en Français}
+
+\enluminure{L}{e résumé en Français} est probablement la partie de la thèse la plus fastidieuse à écrire.
+C'est chiant, et tout le monde s'en tamponne \dots
+
+\onlyif{chap_minitoc}{
+\mtcsettitle{minitoc}{Sommaire}
+\mtcaddchapter
+\minitoc
+}
+
+\clearpage
+
+\subimport{./}{intro_se_fr.tex}
+\subimport{./}{contributions.tex}
+
+
+% chapter resume_fr (end)
+
+\end{otherlanguage}

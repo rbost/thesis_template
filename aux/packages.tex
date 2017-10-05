@@ -1,0 +1,209 @@
+% !TEX root = ../master.tex
+
+% Use utf-8 encoding for foreign characters
+\usepackage[utf8]{inputenc}
+\usepackage[russian,frenchb,english]{babel}
+
+
+\usepackage{pdfpages} % For front and back covers, warning, when scehack is used, must be loaded before mathtools
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\usepackage{mathtools}
+\usepackage{mathdots}
+\usepackage{stmaryrd}
+
+\usepackage{enumitem, framed}
+
+
+
+%% For gorgeous subfigures
+\usepackage{caption}
+\captionsetup{justification=justified,labelfont=bf,labelsep=endash}
+\usepackage{subcaption}
+\usepackage{dblfloatfix}                 
+
+
+\usepackage{multicol}
+\usepackage{boxedminipage}
+
+%----------------------------------------------------------------------
+%                     Floats and Tables
+%----------------------------------------------------------------------
+
+\usepackage{booktabs}
+
+%% For footnotes in tables
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\makesavenoteenv{table*}
+\usepackage{multirow}
+
+\usepackage{rotating}
+
+%----------------------------------------------------------------------
+%                     Minitoc
+%----------------------------------------------------------------------
+
+\onlyif{chap_minitoc}{
+\usepackage[english]{minitoc}
+\setcounter{minitocdepth}{2}
+}
+
+%----------------------------------------------------------------------
+%                     Todonotes
+%----------------------------------------------------------------------
+
+\iftoggle{allowtodo}{
+  \iftoggle{showtodo}{
+  	\iftoggle{inlinetodo}{
+		\newcommand{\todo}[1]{\textcolor{red}{[{\footnotesize {\bf TODO:} { {#1}}}]}}
+		
+	}{
+		\usepackage[textsize=small]{todonotes}
+	}
+  }{
+    \usepackage[disable]{todonotes}
+	\renewcommand{\todo}[1]{}
+  }
+  % add xspace to todo command (http://tex.stackexchange.com/a/68741)
+  \usepackage{xspace}
+  % \makeatletter
+  \expandafter\apptocmd\csname\string\todo\endcsname{\xspace}{}{}
+  % \makeatother
+}{
+}
+
+%----------------------------------------------------------------------
+%                     Algorithms
+%----------------------------------------------------------------------
+
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage[]{algpseudocode}
+\newcommand{\algsep}{\begin{center}\rule{\textwidth}{0.4pt}\end{center}}
+
+\renewcommand{\thealgorithm}{\arabic{chapter}.\arabic{algorithm}}
+
+
+\input{aux/algorithms.tex}
+
+
+\usepackage{float}
+
+\newfloat{protocol}{tbph}{lop}
+\floatname{protocol}{Protocol}
+
+
+%----------------------------------------------------------------------
+%                     Theorems
+%----------------------------------------------------------------------
+
+\usepackage{amsthm}
+
+% To repeat theorems numbers easily (e.g. when deferring the proof)
+\makeatletter
+\newtheorem*{rep@theorem}{\rep@title}
+\newcommand{\newreptheorem}[2]{%
+\newenvironment{rep#1}[1]{%
+ \def\rep@title{#2 \ref{##1}}%
+ \begin{rep@theorem}}%
+ {\end{rep@theorem}}}
+\makeatother
+
+\newtheorem{theorem}{Theorem}[chapter]
+\newreptheorem{theorem}{Theorem}
+
+\newtheorem{proposition}[theorem]{Proposition}
+% \newtheorem{informaltheorem}[theorem]{Theorem}
+% \newtheorem{informalcorollary}[theorem]{Corollary}
+% \newtheorem{informalclaim}[theorem]{Claim}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{claim}[theorem]{Claim}
+% \newtheorem{remark}{Remark}[section]
+% \newtheorem{remark}[theorem]{Remark}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+% \newtheorem{fact}[theorem]{Fact}
+% \newtheorem{assumption}{Assumption}
+
+
+%----------------------------------------------------------------------
+%                     Crypto
+%----------------------------------------------------------------------
+
+\usepackage[lambda,advantage,adversary,landau,sets,notions,logic,ff,primitives,events,asymptotics,keys]{cryptocode}
+
+% Advandtage style
+\renewcommand{\pcadvantagesuperstyle }[1]{\mathrm{#1}}
+% \renewcommand{\pcadvantagesubstyle }[1]{#1}
+
+% Adversary style
+% \renewcommand{\pcadvstyle }[1]{\ mathcal{#1}}
+
+%----------------------------------------------------------------------
+%                     TikZ
+%----------------------------------------------------------------------
+
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,positioning,calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{fit}
+
+\def\ruleoffset{0.5em}
+
+
+%----------------------------------------------------------------------
+%                     GnuPlot (with TikZ)
+%----------------------------------------------------------------------
+\usepackage{gnuplot_sty/gnuplot-lua-tikz}
+
+%----------------------------------------------------------------------
+%                     Import (useful when using a lot of files)
+%----------------------------------------------------------------------
+\usepackage{import}
+
+%----------------------------------------------------------------------
+%                     Figures and Units
+%----------------------------------------------------------------------
+\usepackage[binary-units,mode=text]{siunitx}
+
+%----------------------------------------------------------------------
+%                     Hyperref at last
+%----------------------------------------------------------------------
+
+\definecolor{blue_link}{RGB}{0,0,150}
+
+\usepackage[pageanchor=true,
+			plainpages=false,
+			pdfpagelabels=true,
+			bookmarksopen=true,
+			bookmarksopenlevel=1
+			]{hyperref}
+
+\hypersetup{
+  % linktoc        = page,
+  % pdfpagemode    = UseOutlines,
+  colorlinks     = \iftoggle{printversion}{false}{true},
+  linkcolor      = blue_link,
+  citecolor      = blue_link,
+  urlcolor       = blue_link,
+  bookmarksdepth = 3
+}
+
+\makeatletter
+\AtBeginDocument{
+  \hypersetup{
+    pdftitle  = {\@title},
+    pdfauthor = {\@author}
+  }
+}
+\makeatother
+
+\renewcommand*{\theHsection}{ch.\the\value{chapter}.sec.\the\value{section}}
+
+\renewcommand\UrlFont{\small\ttfamily}

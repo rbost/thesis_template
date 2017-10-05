@@ -1,0 +1,64 @@
+% !TEX root = ../master.tex
+
+
+% New 'keywords' for algorithmicx
+\newcommand{\InputA}[1]{\State \textbf{Input A:} #1}
+\newcommand{\InputB}[1]{\State \textbf{Input B:} #1}
+\newcommand{\OutputA}[1]{\State \textbf{Output A:} #1}
+\newcommand{\OutputB}[1]{\State \textbf{Output B:} #1}
+\algnewcommand\algorithmicto{\textbf{to}}
+\algrenewtext{For}[3]%
+  {\algorithmicfor\ $#1 = #2$ \algorithmicto\ $#3$ \algorithmicdo}
+
+\algblockdefx[IFRED]{IfRed}{EndIfRed}
+	[1]{\red{\algorithmicif\ {#1}}}
+   	[0]{\red{\algorithmicend\ \algorithmicif}}
+
+\algcblockx{IFRED}{ElseRed}{EndIfRed}
+	[0]{\red{\algorithmicelse\ }}
+	[0]{\red{\algorithmicend\ \algorithmicif}}
+   
+\algblockdefx[FORALLRED]{ForAllRed}{EndForRed}
+   [1]{\red{\algorithmicforall\ {#1}}}
+   [0]{\red{\algorithmicend\ \algorithmicfor}}
+
+\algloopdefx[SMALLIF]{SmallIf}
+	[1]{\algorithmicif\ {#1}}   
+   
+\algloopdefx[SMALLIFRED]{SmallIfRed}
+	[1]{\red{\algorithmicif\ {#1}}}  
+	 
+\algblockdefx[GAME]{GameBlock}{EndGameBlock}
+   [1]{{#1} Game:}
+   [0]{}
+\algtext*{EndGameBlock} % remove the EndGame line
+
+\newcommand{\IfLine}[1]{\State \algorithmicif\ {#1}}   
+\newcommand{\ElseLine}{\State \algorithmicelse\ }   
+\newcommand{\IfLineRed}[1]{\State \red{\algorithmicif\ {#1}}}   
+  
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+
+\algrenewcommand\algorithmicindent{1.0em}%
+\algrenewcommand\alglinenumber[1]{\scriptsize #1:}
+\algrenewcommand{\algorithmiccomment}[1]{\hfill\hspace{.2cm} $\triangleright$\ \textit{#1}}
+
+\makeatletter
+\newcommand{\setalglineno}[1]{%
+  \setcounter{ALG@line}{\numexpr#1-1}}
+\makeatother
+
+
+
+% to create nice, two columns, algorithms
+\newcommand{\twocolsalgsrightmargin}{.7em}
+\newcommand{\twocolsalgs}[2]{%
+	\begin{varwidth}[t]{0.48\textwidth}%
+		{#1}%
+	\end{varwidth}%
+\hfill%
+	\begin{varwidth}[t]{0.48\textwidth}%
+		{#2}%
+	\end{varwidth}%
+\hspace{\twocolsalgsrightmargin}%
+}

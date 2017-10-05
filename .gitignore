@@ -1,0 +1,26 @@
+*.log
+# *.pdf
+*.aux
+*.out
+*.synctex.gz
+.*.lb
+*.bbl
+*.blg
+*.tdo
+*.ent
+*.idx
+*.dvi
+*.glo
+*.ilg
+*.ind
+*.maf
+*.toc
+*.mtc*
+.DS_Store
+
+*.fdb_latexmk
+*.fls
+
+aux/chapter_toggles.conf
+
+master.pdf

@@ -1,0 +1,192 @@
+%!TEX TS-options = --output-directory=build
+
+\RequirePackage{etoolbox}
+\newcommand{\onlyif}[2]{\iftoggle{#1}{#2}{}}
+
+%% Sometimes, we need the good old \if ...
+\makeatletter
+\newcommand{\iftogglehard}[1]{%
+	\ifcsdef{etb@tgl@#1}
+		{\csname etb@tgl@#1\endcsname\iftrue\iffalse}
+		{\etb@noglobal\etb@err@notoggle{#1}\iffalse}%
+}
+\makeatother
+
+
+\newtoggle{draft}         % true = draft version => quicker compilation but some features disabled (microtype, chapterthumb because of bug with synctex, ...)
+\newtoggle{showoverflow}  % true = show overflows
+\newtoggle{allowtodo}     % false = remove todo command
+\newtoggle{showtodo}      % true = show todo; false = hide todo
+\newtoggle{inlinetodo}    % true = use inlined todo instead of the package
+\newtoggle{printversion}  % true = print version, without colored linked; false = default version
+\newtoggle{biblatex}	  % true = use biblatex for the bibliography; false = use bibtex
+\newtoggle{chapter_bib}   % true = display intermediate bibliographies; false = don't. Needs biblatex.
+\newtoggle{chap_minitoc}  % true = display mini table of contents at the beginning of each chapter
+
+% \toggletrue{printversion}
+% \toggletrue{draft}
+% \toggletrue{showoverflow}
+% \toggletrue{allowtodo}
+% \toggletrue{showtodo}
+\toggletrue{biblatex}
+\toggletrue{chapter_bib}
+\toggletrue{chap_minitoc}
+
+\input{aux/layout.tex}
+\input{aux/packages.tex}
+\input{aux/fonts.tex}
+\input{aux/macros.tex}
+\input{aux/sse_macros.tex}
+
+\input{aux/chapter_toggles.tex}
+
+\usepackage{lipsum}
+
+
+\makeglossary
+\makeindex
+
+
+\title{An amazing PhD topic}
+\subtitle{Great things you did}
+\author{John DOE \texorpdfstring{\\[1em]}{---} Supervisors: Jane SMITH}
+\date{}
+
+
+
+%-------------------------------------------------------------------
+%                        Bibliography
+%-------------------------------------------------------------------
+\onlyif{biblatex}{
+
+%% Add all your bib resources one-by-one if you are using biblatex
+%% The first two suppose that you are using Cryptobib (http://cryptobib.di.ens.fr)
+\addbibresource{cryptobib/abbrev3}
+\addbibresource{cryptobib/crypto.bib}
+
+\addbibresource{biblio_aux.bib}
+
+\defbibheading{references}[References]{% 
+    \section*{#1}% 
+    \markboth{#1}{#1}%
+}
+
+\defbibheading{fullbib}[Complete Bibliography]{% 
+    \chapter*{#1}%
+    \addcontentsline{toc}{chapter}{#1}
+    \markboth{#1}{#1}%
+}
+
+\defbibheading{selfbib}[\bibname]{%
+	\subsection*{#1}%
+	% \addcontentsline{toc}{subsection}{#1}
+}
+
+
+%% Here, list all your contributions
+\DeclareBibliographyCategory{self}
+\addtocategory{self}{EPRINT:Doe36}
+\addtocategory{self}{NDSS:DoeSmi38}
+\addtocategory{self}{CCS:DDMS39}
+}
+
+\begin{document}
+	
+\frontmatter
+
+% to silence warnings about identifiers duplication
+% cf. https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#Problems_with_Links_and_Pages
+\pagenumbering{alph}
+
+%% Add the cover of the thesis
+\includepdf{cover/front.pdf}
+\setcounter{page}{0}
+
+\cleardoublepage
+
+\maketitle
+
+% to silence warnings about identifiers duplication
+% cf. https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#Problems_with_Links_and_Pages
+\pagenumbering{roman} 
+
+
+
+%-------------------------------------------------------------------
+%               Acknowledgments
+%-------------------------------------------------------------------
+
+% \thispagestyle{empty}\hbox{}\newpage%
+
+\input{content/acknowledgments.tex}
+\cleardoublepage
+
+
+%-------------------------------------------------------------------
+%               ToCs Setup
+%-------------------------------------------------------------------
+
+\onlyif{chap_minitoc}{
+\dominitoc
+}
+\setcounter{tocdepth}{1}% no subsection
+\setcounter{secnumdepth}{3}
+
+
+%-------------------------------------------------------------------
+%               Résumé en Français (Summary in French)
+%-------------------------------------------------------------------
+
+%% Use this if you need to write a summary of your thesis (possibly
+%% in an other language). 
+%% Otherwise, you can comment it.
+
+\subimport{content/resume_fr/}{resume_fr_master.tex}
+
+%-------------------------------------------------------------------
+%               ToC
+%-------------------------------------------------------------------
+
+\cleartoevenpage[\thispagestyle{empty}]
+\pdfbookmark{Table of Contents}{book:toc}
+\tableofcontents
+
+%-------------------------------------------------------------------
+%                        Content
+%-------------------------------------------------------------------
+
+\mainmatter
+\pagenumbering{arabic}
+
+\addtocrule
+
+\import{content/}{content}
+
+
+%-------------------------------------------------------------------
+%                       Back Matter
+%-------------------------------------------------------------------
+
+\backmatter
+
+
+%-------------------------------------------------------------------
+%                       Bibliography
+%-------------------------------------------------------------------
+
+\iftoggle{biblatex}{
+\printbibliography[heading=fullbib, title=Bibliography]
+}{
+\bibliographystyle{alpha}
+%% If you use the standard bibtex, list your bib resources here
+\bibliography{cryptobib/abbrev3,biblio_aux,cryptobib/crypto}
+}
+\listoffigures
+
+\listoftables
+
+\listofalgorithms
+
+% \includepdf{cover/back.pdf}
+
+\end{document}

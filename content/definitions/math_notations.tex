@@ -1,0 +1,139 @@
+% !TEX root = definitions_master.tex
+
+\section{Mathematical Notations} % (fold)
+\label{sec:math_notations}
+
+\paragraph{Sets and rings.} % (fold)
+\label{par:def_sets_rings}
+
+The set of integers is denoted $\ZZ$, the set of non-negative integers $\NN$.
+If $a$ and $b$ are two integers such that $a \leq b$, we denote by $\bb{a,b}$ the set $\{x \in \ZZ | a \leq x \leq b\}$ of integers between $a$ and $b$ (both included).
+Also, $\ZZ_n$ is the ring $\ZZ/n \ZZ$ of integers modulo the integer $n$.
+For a prime integer $p$, $\FF_p = \ZZ_p$ is the field with $p$ elements.
+$\varphi(\cdot)$ is the Euler totient function.
+For any set $S$, $\cP(S)$ is the set of all finite subsets of $S$.
+% paragraph def_sets_rings (end)
+
+\paragraph{Bilinear Groups} % (fold)
+\label{par:def_bilinear_groups}
+
+Some of the cryptographic primitives we will use an additional structure on groups called a pairing (a.k.a. bilinear groups).
+Let $\GG_1$, $\GG_2$ and $\GG_T$ be three cyclic groups of the same order $N$ and with respective generator $g_1$, $g_2$ and $g_T$.
+$(\GG_1, \GG_2, \GG_T, e)$ is called a \emph{bilinear group} if $e : \GG_1 \times \GG_2 \rightarrow \GG_T$ satisfies the following properties:
+\begin{itemize}
+	\item For all $(a,b) \in \ZZ^2_N$, $e(g_1^a, g_2^b) = e(g_1,g_2)^{a b}$ (bilinearity);
+	\item The element $e(g_1,g_2)$ generates $\GG_T$ (non-degeneracy);
+	\item $e(\cdot,\cdot)$ is efficiently computable.
+\end{itemize}
+We explain the next paragraphs what efficient means.
+Without loss of generality, we can suppose that $e(g_1,g_2) = g_T$.
+We call bilinear groups with $\GG_1 = \GG_2$ Type-1 (or symmetric) bilinear groups, and in this case, we suppose that $g = g_1 = g_2$.
+If $\GG_1 \neq \GG_2$, and that there is no efficiently computable isomorphism between $\GG_1$ and $\GG_2$, it is a Type-3 (asymmetric) bilinear group.
+% subsection def_bilinear_groups (end)
+
+\paragraph{Bit strings.} % (fold)
+\label{par:def_bit_strings}
+
+
+A bit $b$ is an element in $\zo$; a bit string $s$ of length $n$ is a vector of $n$ bits.
+$\varepsilon$ denotes the \emph{empty} bit string of size 0. 
+The set of bit strings of size $n$ is hence denoted $\zo^n$, and the set of bit strings of finite length is $\zo^* = \cup_{n \geq 0} \zo^n$.
+The concatenation of two bit strings $x$ and $y$ is denoted $x||y$.
+
+% paragraph def_bit_strings (end)
+
+
+\paragraph{Distributions and Probabilities} % (fold)
+\label{par:def_distrib_probas}
+
+For a finite set $S$, $s \getsr S$ means that $s$ is sampled uniformly at random from $S$.
+The probability of an event $E$ to occur is denoted $\Prob[E]$.
+Let $X$ be a random variable. The expected value of $X$ is $\Exp[X]$, and $\Var[X]$ its variance.
+The entropy and min-entropy of a discrete random variable $X$ taking value $\{x_1, \dots, x_n\}$ are denoted $H_1(X)$ and $H_{\infty}(X)$ and are defined as
+\begin{align*}
+	\Entropy(X) &= - \sum_{i=1}^{n} \Prob[X = x_i] \cdot \log \Prob[X = x_i], \\
+	\text{and } \MinEntropy(X) &= - \min_{1 \leq i \leq n} \{ \log \Prob[X = x_i] \} = \max_{1 \leq i \leq n} \{ - \log \Prob[X = x_i] \}
+\end{align*}
+where $\log$ is the base-2 logarithm.
+For two random discrete random variable $Y$ and $Z$ over the set $\{x_1, \dots, x_n\}$, the  Kullback–Leibler divergence from $Y$ to $Z$, $\Div(Y || Z)$, is defined as
+\[
+	\Div(Y || Z) = \sum_{i=1}^{n} \Prob[Y = x_i] \log \frac{\Prob[Y = x_i]}{\Prob[Z = x_i]}.
+\]
+
+Finally, we define the distance $\Delta(\cD_1, \cD_2)$ between the two distributions $\cD_1$ and $\cD_2$ over a set $X$ as
+\[
+	\Delta(\cD_1, \cD_2) = \max_{x \in X} \left|\Prob[Y_1 = x] -  \Prob[Y_2 = x]\right|
+\]
+where $Y_1$ (resp $Y_2$) is a random variable following the distribution $\cD_1$ (resp. $\cD_2$).
+% paragraph def_distrib_probas (end)
+
+
+\paragraph{Asymptotics.} % (fold)
+\label{par:def_asymptotics}
+
+For asymptotics, we use the standard Landau notations $\bigO{\cdot}$, $\smallO{\cdot}$, $\bigOmega{.}$, $\smallOmega{.}$ and $\bigsmallO{.}$.
+We also use $\bigOtilde{.}$ to hide poly-logarithmic factors in asymptotics:
+\[
+	f(n) = \bigOtilde{g(n)} \Leftrightarrow \exists c \in \NN \text{ such that } f(n) = \bigO{g(n) \log^c(n)}.
+\]
+In the following, $\poly[n]$ denotes an unspecified function $f(n) = \bigO{n^c}$ for some fixed constant $c$, and $\negl[n]$ is a negligible function $f$ such that $f(n) = \smallO{n^{-c}}$ for any constant $c > 0$. 
+
+% paragraph def_asymptotics (end)
+
+
+\paragraph{Algorithms, Turing machines, and Oracles} % (fold)
+\label{par:def_tm_oracles}
+
+Algorithms are programs for Turing machines.
+They can be probabilistic, and use a tape of the Turing machine filled with random bits (also called random coins).
+By default algorithms are probabilistic. 
+For an algorithm $A$, $y \gets A(x)$ means that $A$ is run on input $x$ (with fresh random coins if $A$ is probabilistic), and that the result is stored in $y$.
+More generally $y \gets a$ states that the result of the evaluation of the expression $a$ is stored in the variable $y$.
+
+An interactive Turing machine is a special kind of Turing machines able to communicate with external algorithms. 
+To do so, the interactive Turing machine uses additional tapes to communicate with the other Turing machines, namely an input tape to send messages, and an output tape to receive messages.
+For an interactive Turing machine $\cT$, the Turing machines $\cT$ has access to are called its \emph{oracles}.
+We write $\cT^{O_1, O_2}(x)$ to say that the Turing machine $\cT$ is called with input $x$ and has access to the oracles $O_1$ and $O_2$.
+
+
+For a distribution $\cD$, $A(\cD)$ denotes the output of the execution of $A$ on an input $x$ sampled from the distribution $\cD$.
+
+
+In this manuscript, we will often abuse notations, and identify a Turing machine and the algorithm it runs. 
+
+Finally, we will say that an algorithm is \emph{efficient} if it runs in time polynomial in the size of its arguments.
+
+% paragraph def_tm_oracles (end)
+
+\paragraph{Protocols.} % (fold)
+\label{par:def_protocols}
+	A two-party protocol $P = (A_1, A_2)$ is a pair of algorithms $A_1$ and $A_2$, interactively executed by a pair of two Turing machines $\cT_1$ and $\cT_2$. 
+	% In the paper, we will construct and use some two-party protocols, involving a client $C$ and a server $S$.
+	We will denote the execution of the protocol $P$ as 
+	\[
+		P(\mathtt{input}_1; \mathtt{input}_2) = (A_1(\mathtt{input}_1), A_2(\mathtt{input}_2)),
+	\]
+	meaning that $A_1$ (resp. $A_2$) is executed by $\cT_1$ (resp. $\cT_2$) with input $\mathtt{input}_1$ (resp. $\mathtt{input}_2$).
+	We write
+	\[
+		(\mathtt{out}_1; \mathtt{out}_2) \getsr A_1(\mathtt{input}_1) \leftrightarrow A_2(\mathtt{input}_2)
+	\]
+	to mean that $\mathtt{out}_1$ and $\mathtt{out}_2$ are the outputs of the interaction between $A_1$ on input $\mathtt{input}_1$ and $A_2$ on input $\mathtt{input}_2$, respectively.
+	We also simplify this notation and denote the result of the execution of $P$ as
+	\[
+		(\mathtt{out}_1; \mathtt{out}_2) \getsr  P(\mathtt{input}_1; \mathtt{input}_2)
+	\]
+	In this formalism, we consider the messages $\tau_{1 \rightarrow 2}$ (resp. $\tau_{1 \leftarrow 2}$)  sent by $\cT_1$ to $\cT_2$ (resp. $\cT_2$ to $\cT_1$) as part of the output $\mathtt{out}_1$ (resp. $\mathtt{out}_2$).
+	These messages are called the \emph{transcript} of $\cT_1$ (resp. $\cT_2$). 
+	Transcripts might be omitted from the output of the protocol for simplicity of the notations.
+% paragraph def_protocols (end)
+
+
+\paragraph{Miscellaneous.} % (fold)
+\label{par:def_miscellaneous}
+As mentioned earlier, the base-2 logarithm of the value $x$ is $\log x$. 
+When the variable $T$ is a dictionary, $T[v]$ denotes the item associated to $v$, if there is one, whereas $\bot$ denotes the absence of this item.
+
+% paragraph def_miscellaneous (end)
+
+% section math_notations (end)

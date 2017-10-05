@@ -1,0 +1,20 @@
+% !TEX root = ../master.tex
+
+
+\newtoggle{introduction_chapter}
+\newtoggle{definitions_chapter}
+\newtoggle{conclusion_chapter}
+
+%% Display chapters by default
+
+\toggletrue{introduction_chapter}
+\toggletrue{definitions_chapter}
+\toggletrue{conclusion_chapter}
+
+%% Maybe we changed something
+
+\IfFileExists{aux/chapter_toggles.conf}{
+%% Create this file to disable some chapters
+%% It is not tracked by git (cf. .gitignore)
+\input{aux/chapter_toggles.conf}
+}{}

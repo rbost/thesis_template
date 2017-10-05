@@ -1,0 +1,52 @@
+%!TEX root = ../definitions_master.tex
+
+	\begin{figure}[ht]
+	% \begin{boxedminipage}{\textwidth}
+		\centering
+
+		\begin{tabular}{r|l}
+
+			\begin{minipage}[t]{0.40\textwidth}
+				\underline{$\Init()$}
+				\begin{algorithmic}[0]
+					\State $K \getsr \cK$
+					\State $\win \gets \false$
+					\State $Q \gets \emptyset$
+				\end{algorithmic}
+
+
+				\underline{$\mathsf{Query}(x)$}
+				\begin{algorithmic}[0]
+					\State $t \gets \MAC(K, x)$
+					\State $Q \gets Q \cup \{ (x,t) \}$
+					\State \Return $t$
+				\end{algorithmic}
+				
+			\end{minipage}
+				&
+			\hspace{0.6cm}
+			\begin{minipage}[t]{0.45\textwidth}
+
+
+				\underline{$\mathsf{Challenge}(x', t')$}
+				\begin{algorithmic}[0]
+					\If{$\verify(K,x', t') = \top$ \\ \tttab and  $(x', s') \notin Q$} 
+						\State { $\win \gets \true$}
+					\EndIf
+				\end{algorithmic}
+				
+				
+				\underline{$\Final()$}
+				\begin{algorithmic}[0]
+					\State \Return $\win$
+				\end{algorithmic}
+
+
+			\end{minipage}
+		\end{tabular}
+		% \end{boxedminipage}
+		
+		\caption[$\EFCMA$ security game]{Procedures of the $G_\subgamestyle{\efcma}$ security game.}
+		\label{fig:game_cma}
+	\end{figure}
+	

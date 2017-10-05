@@ -1,0 +1,34 @@
+% !TEX root = ../content.tex
+
+\chapterquote{Introduction}{Call me Ishmael}{Moby-Dick}{Herman Melville} % (fold)
+\label{cha:introduction}
+
+\enluminure{T}{his thesis took way to much time of your life}, try to make people believe that what you did was actually useful by writing a great introduction.
+Not easy, but important. Probably one of the most annoying part of writing your manuscript.
+
+\onlyif{chap_minitoc}{
+\minitoc
+}
+
+\clearpage
+
+\subimport{./}{motivation.tex}
+\subimport{./}{history.tex}
+\subimport{./}{contributions.tex}
+
+%% You can list your papers to make sure they appear in the bibliography
+\nocite{EPRINT:Doe36}
+\nocite{CCS:DDMS39}
+\nocite{NDSS:DoeSmi38}
+
+\iftoggle{biblatex}{
+
+%% List your contributions
+\printbibliography[heading=selfbib, category=self, title=My Contributions]
+
+\onlyif{chapter_bib}{
+\printbibliography[heading=references, segment=\therefsegment]
+}
+}{
+%% List your contributions using a \bibitem list
+}
