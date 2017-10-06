@@ -64,6 +64,26 @@ To use this template, you can just clone this repo, or fork it.
 
 ```
 
+Configuration Flags
+-------------------
+
+This template has several configurations flags.
+
+* `draft`: activates the draft mode. Disables microtype and chapterthumb  
+* `chapterthumb`: activates chapter thumbs (gray blocks on the right of odd pages with the chapter number)
+* `showoverflow`: activates an overfull hbox indicator (very useful for to locate them)
+* `allowtodo`: allows the `\todo` command. Otherwise, the compilation will fail if you have some todos in your document. Turn off this option to make sure you did not forget any todo.
+* `showtodo`: displays the todos in the document.
+* `inlinetodo`: when turned on, this option makes the todos appear inlined in red in the document. Otherwise, they are displayed in the margins.
+* `printversion`: disable colored links for the print version
+* `biblatex`: use biblatex instead of bibtex for bibliography management
+* `chapter_bib`: display a bibliography at the end of each chapter listing all the citation within this chapter
+* `chap_minitoc`: display a table of content at the beginning of each chapter 
+* `lettrine`: enables the lettrines, using the `\lettrine` command. If this option is turned off, the lettrine will be displayed as normal text.
+* `enluminure`: enables the `\enluminure` command, a lettrine with a special font. If this option is disabled, and `lettrine` is enabled, the `\lettrine` command will be used instead. If both options are disabled, the enluminure will be displayed as normal text.
+
+These flag can be set (resp. unset) by using `\toggletrue{flag}` (resp. `\togglefalse{flag}`)
+
 
 For Cryptographers
 ------------------
