@@ -14,6 +14,7 @@
 
 
 \newtoggle{draft}         % true = draft version => quicker compilation but some features disabled (microtype, chapterthumb because of bug with synctex, ...)
+\newtoggle{chapterthumb}  % true = enable chapter thumbs; false = disable chapterthumb
 \newtoggle{showoverflow}  % true = show overflows
 \newtoggle{allowtodo}     % false = remove todo command
 \newtoggle{showtodo}      % true = show todo; false = hide todo
@@ -22,15 +23,20 @@
 \newtoggle{biblatex}	  % true = use biblatex for the bibliography; false = use bibtex
 \newtoggle{chapter_bib}   % true = display intermediate bibliographies; false = don't. Needs biblatex.
 \newtoggle{chap_minitoc}  % true = display mini table of contents at the beginning of each chapter
+\newtoggle{lettrine}	  % true = enable the lettrine command
+\newtoggle{enluminure}	  % true = enable the enluminure command. Works only if lettrine is set to true
 
 % \toggletrue{printversion}
 % \toggletrue{draft}
+\toggletrue{chapterthumb}
 % \toggletrue{showoverflow}
 % \toggletrue{allowtodo}
 % \toggletrue{showtodo}
 \toggletrue{biblatex}
 \toggletrue{chapter_bib}
 \toggletrue{chap_minitoc}
+\toggletrue{lettrine}
+\toggletrue{enluminure}
 
 \input{aux/layout.tex}
 \input{aux/packages.tex}

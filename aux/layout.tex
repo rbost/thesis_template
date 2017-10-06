@@ -24,6 +24,7 @@
 \usepackage[dvipsnames]{xcolor}
 \definecolor{halfgray}{gray}{0.55} % chapter numbers will be semi transparent .5 .55 .6 .0
 
+\usepackage{anyfontsize}
 
 % -------------------------------------------------------------------------
 % Headings
@@ -60,7 +61,7 @@
 % -------------------------------------------------------------------------
 
 \nottoggle{draft}{
-
+\onlyif{chapterthumb}{
 \usepackage{aux/chapterthumb}
 \renewcommand*{\chapterthumbheight}{4em}
 \renewcommand*{\chapterthumbboxcolor}{gray}%
@@ -70,7 +71,7 @@
 \setkomafont{chapterthumb}{\normalfont\LARGE}
 
 \AddLayersToPageStyle{@everystyle@}{chapterthumb}
-
+}
 }{}
 
 % -------------------------------------------------------------------------
@@ -198,23 +199,27 @@
 % -------------------------------------------------------------------------
 
 
-\usepackage{lettrine}
-% \usepackage{aux/Typocaps}
-% \usepackage{yfonts}
-% \usepackage{oldgerm}
-\input Typocaps.fd
-\newcommand*\initfamily{\usefont{U}{Typocaps}{xl}{n}}
+\iftoggle{lettrine}{
+	\usepackage{lettrine}
 
-\usepackage{anyfontsize}
+	\renewcommand*{\DefaultLoversize}{.2}
+	\setlength{\DefaultFindent}{1pt}
+	\setlength{\DefaultNindent}{0em}
 
+	\iftoggle{enluminure}{
+		\input Typocaps.fd
+		\newcommand*\initfamily{\usefont{U}{Typocaps}{xl}{n}}
 
-\renewcommand*{\DefaultLoversize}{.2}
-\setlength{\DefaultFindent}{1pt}
-\setlength{\DefaultNindent}{0em}
+		% \newcommand{\enluminure}[2]{\lettrine[lines=3]{\small \initfamily #1}{#2}}
+		\newcommand{\enluminure}[2]{\lettrine[lines=3]{\fontsize{35}{60}\initfamily #1}{#2}}
+	}{ % else enluminure
+		\newcommand{\enluminure}[2]{\lettrine[lines=3]{#1}{#2}}
+	} % endif enluminure
 
-% \newcommand{\enluminure}[2]{\lettrine[lines=3]{\small \initfamily #1}{#2}}
-\newcommand{\enluminure}[2]{\lettrine[lines=3]{\fontsize{35}{60}\initfamily #1}{#2}}
-
+}{ % else lettrine
+	\newcommand{\lettrine}[3][]{{#2}{#3}}
+	\newcommand{\enluminure}[2]{{#1}{#2}}
+} % endif lettrine
 
 % -------------------------------------------------------------------------
 % Microtype
